@@ -1,4 +1,4 @@
-name: Dependencies Example
+name: Build Example
 
 on: 
   push:
@@ -18,5 +18,6 @@ jobs:
         with:
           node-version: 24
       
-      - name: verification
-        run: ls -alhR
+      - name: Build the code
+        run: npm install 
+
