@@ -20,4 +20,6 @@ jobs:
       
       - name: Build the code
         run: npm install 
+      - name: Test the code
+        run: npm test --coverage
 
