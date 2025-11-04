@@ -21,6 +21,9 @@ jobs:
       - name: Build the code
         run: npm install 
         
+      - name: Test the code
+        run: npm test --coverage
+        
       - name: Better Test Reports Action
         uses: mridang/action-test-reporter@v1.6.0
 
