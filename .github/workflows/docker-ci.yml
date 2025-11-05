@@ -46,13 +46,13 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/calculator-app:${{ steps.vars.outputs.tag }}
+          tags: ${{ vars.DOCKERHUB_USERNAME }}/calculator-app:${{ steps.vars.outputs.tag }}
 
       # 6️⃣ Extra: Scan image op kwetsbaarheden
       - name: Scan Docker image for CVEs
         uses: docker/scout-action@v1
         with:
-          image: ${{ secrets.DOCKERHUB_USERNAME }}/calculator-app:${{ steps.vars.outputs.tag }}
-          dockerhub-user: ${{ secrets.DOCKERHUB_USERNAME }}
+          image: ${{ vars.DOCKERHUB_USERNAME }}/calculator-app:${{ steps.vars.outputs.tag }}
+          dockerhub-user: ${{ vars.DOCKERHUB_USERNAME }}
           dockerhub-password: ${{ secrets.DOCKERHUB_TOKEN }}
           summary: true
