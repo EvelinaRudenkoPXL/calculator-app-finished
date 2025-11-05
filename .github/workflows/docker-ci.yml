@@ -52,6 +52,7 @@ jobs:
       - name: Scan Docker image for CVEs
         uses: docker/scout-action@v1
         with:
+          command: cves
           image: ${{ vars.DOCKERHUB_USERNAME }}/calculator-app:${{ steps.vars.outputs.tag }}
           dockerhub-user: ${{ vars.DOCKERHUB_USERNAME }}
           dockerhub-password: ${{ secrets.DOCKERHUB_TOKEN }}
