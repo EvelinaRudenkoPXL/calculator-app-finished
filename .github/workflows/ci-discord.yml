@@ -1,0 +1,67 @@
+name: CI Discord
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          repository: PXL-2TIN-DevOps-Resources/calculator-app-finished
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run tests with coverage
+        run: npm test -- --coverage
+
+      - name: Upload test results as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: coverage/
+
+      # --- ✅ Discord notification for success ---
+      - name: Notify Discord (Success)
+        if: success() && github.ref == 'refs/heads/main'
+        uses: Ilshidur/action-discord@v2
+        with:
+          args: |
+            🎉 Build succeeded for **${{ github.repository }}** on branch **${{ github.ref_name }}** 🚀
+            Triggered by: **${{ github.actor }}**
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+
+      # --- ❌ Discord notification for failure ---
+      - name: Notify Discord (Failure)
+        if: failure() && github.ref == 'refs/heads/main'
+        uses: Ilshidur/action-discord@v2
+        with:
+          args: |
+            ❌ Build failed for **${{ github.repository }}** on branch **${{ github.ref_name }}** 💥
+            Triggered by: **${{ github.actor }}**
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+
+      # --- 💬 Pull Request Comment ---
+      - name: Comment on PR with build result
+        if: github.event_name == 'pull_request' && (success() || failure())
+        uses: peter-evans/create-or-update-comment@v3
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            🧪 CI Build for **${{ github.event.pull_request.head.ref }}**
+            Status: ${{ job.status }}
+            Test coverage report uploaded as artifact.
