@@ -47,7 +47,7 @@ jobs:
       # --- ❌ Discord notification for failure ---
       - name: Notify Discord (Failure)
         if: failure() && github.ref == 'refs/heads/main'
-        uses: Ilshidur/action-discord@v2
+        uses: ilshidur/action-discord@master
         with:
           args: |
             ❌ Build failed for **${{ github.repository }}** on branch **${{ github.ref_name }}** 💥
