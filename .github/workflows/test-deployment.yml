@@ -1,0 +1,31 @@
+name: Test Deployment
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout (optioneel, maar meestal handig)
+        uses: actions/checkout@v4
+
+      - name: Pull latest Docker image
+        run: |
+          docker pull ${{ vars.DOCKERHUB_USERNAME }}/calculaotr-app:latest
+
+      - name: Stop running containers
+        run: |
+          CONTAINER_ID=$(docker ps -q --filter "ancestor=${{ vars.DOCKERHUB_USERNAME }}/calculaotr-app:latest")
+          if [ ! -z "$CONTAINER_ID" ]; then
+            docker stop $CONTAINER_ID
+            docker rm $CONTAINER_ID
+          fi
+
+      - name: Run latest container
+        run: |
+          docker run -d \
+            -p 3000:3000 \
+            --name calculator-app \
+            ${{ vars.DOCKERHUB_USERNAME }}/calculaotr-app:latest
