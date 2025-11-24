@@ -13,11 +13,11 @@ jobs:
 
       - name: Pull latest Docker image
         run: |
-          docker pull ${{ vars.DOCKERHUB_USERNAME }}/calculaotr-app:latest
+          docker pull ${{ vars.DOCKERHUB_USERNAME }}/calculator-app:latest
 
       - name: Stop running containers
         run: |
-          CONTAINER_ID=$(docker ps -q --filter "ancestor=${{ vars.DOCKERHUB_USERNAME }}/calculaotr-app:latest")
+          CONTAINER_ID=$(docker ps -q --filter "ancestor=${{ vars.DOCKERHUB_USERNAME }}/calculator-app:latest")
           if [ ! -z "$CONTAINER_ID" ]; then
             docker stop $CONTAINER_ID
             docker rm $CONTAINER_ID
@@ -28,4 +28,4 @@ jobs:
           docker run -d \
             -p 3000:3000 \
             --name calculator-app \
-            ${{ vars.DOCKERHUB_USERNAME }}/calculaotr-app:latest
+            ${{ vars.DOCKERHUB_USERNAME }}/calculator-app:latest
